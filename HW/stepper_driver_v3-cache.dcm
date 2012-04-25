@@ -1,0 +1,7 @@
+EESchema-DOCLIB  Version 2.0  Date: 03-Jan-12 11:04:14 AM
+#
+$CMP LM555N
+F ns/lm555.pdf
+$ENDCMP
+#
+#End Doc Library
