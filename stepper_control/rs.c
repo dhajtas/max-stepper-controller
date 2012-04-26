@@ -74,6 +74,31 @@ uint8_t RS_Send_P(PGM_P tx_string)
 	return(i);
 }
 
+uint8_t RS_Send_num(int16_t num, uint8_t dec, uint8_t last)
+{
+	uint8_t decimal;
+	uint8_t i=0;
+	
+	if(num/10)
+	{
+		if(dec)
+			i = RS_Send_num(num/10,dec-1,0);		// recursion!!!
+		else
+			i = RS_Send_num(num/10,0,0);
+	}
+	decimal = (num%10) + 48;					// conversion to ASCII
+	if(dec == 1)
+		i += RS_Send8_t('.');
+	i =+ RS_Send8_t(decimal);
+	if(last)
+	{
+		RS_Send8_t(0x0A);
+		RS_Send8_t(0x0D);
+		i+=2;
+	}
+	return(i);
+}
+
 uint8_t RS_Get8_t(void)
 {
 	static uint8_t index = 0;

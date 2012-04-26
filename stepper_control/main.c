@@ -36,6 +36,7 @@ int main(void)
 	uint16_t steps;
 	uint8_t	 dir;
 	int16_t	 angle;
+	uint16_t position;
 
 	Status = 0;
 	
@@ -73,9 +74,63 @@ int main(void)
 					case 	'z':
 					case 	'Z':	angle = 0;
 									RS_Clr();
+									RS_Send_P(PSTR("OK\n\r"));
 									break;
 				}
 			}
+		}
+		
+		if(Status & STAT_GO)
+		{
+			if(Status & STAT_TIMER)
+			{
+				DRV_Step(dir);
+				if(SW_END)
+				{
+					steps--;
+					if(dir)
+					{
+						position++;
+						angle += 18;
+					}
+					else
+					{
+						position--;
+						angle -= 18;
+					}
+				}
+				else
+				{
+					DRV_Step((dir + 1) & 0x01);		// one step back if end switch was hit
+					steps = 0;							// end of move - clear steps
+				}
+				if(steps == 0)
+				{
+					Status &= ~STATUS_GO;				// if last step...
+					RS_Send_P(PSTR("OK\n\r"));
+				}
+			}
+		}
+		
+		if(Status & STAT_PRINT)
+		{
+			RS_Send_P(PSTR("Angle         : /t"));
+			RS_Send_num(angle,1,1);
+			RS_Send_P(PSTR("Abs. position : /t"));
+			RS_Send_num(position,0,1);
+		}
+		
+		if(Status & STAT_GO_ZERO)
+		{
+			while(SW_END)
+			{
+				DRV_Step(0);
+				_delay_us(PULSE*10);
+			}
+			Status &= ~STAT_GO_ZERO;
+			position = 0;
+			angle = -1350;
+			RS_Send_P(PSTR("OK\n\r"));
 		}
 
 	}
