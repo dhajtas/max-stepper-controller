@@ -34,7 +34,7 @@ void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
 int main(void)
 {
 	uint16_t steps;
-	uint8_t	 dir;
+	uint8_t	 dir, key;
 	int16_t	 angle;
 	uint16_t position;
 
@@ -131,6 +131,20 @@ int main(void)
 			position = 0;
 			angle = -1350;
 			RS_Send_P(PSTR("OK\n\r"));
+		}
+		
+		key = DRV_Get_key();
+		
+		switch(key & KEYFAST)
+		{
+			case 0		:	if(!(Status & STAT_1SEC))
+								break;
+			case KEYFAST:	if(key & 0x01)
+								DRV_Step(1);
+							else
+								DRV_Step(0);
+							_delay_us(PULSE*10);
+							break;
 		}
 
 	}
