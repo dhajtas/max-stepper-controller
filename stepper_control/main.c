@@ -10,6 +10,7 @@
 
 #include "hw.h"
 #include "rs.h"
+#include "drv.h"
 #include "timer.h"
 
 //-------------------------------------
