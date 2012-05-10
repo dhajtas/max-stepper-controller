@@ -3,6 +3,7 @@
 //------------------------------------------------------------
 
 #include <inttypes.h>
+#include <string.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
@@ -14,12 +15,13 @@
 //------------------------------------------------------------
 
 volatile uint8_t RX_Index;
-volatile uint8_t RX_Beuffer[RX_BUFF_SIZE];
+volatile uint8_t RX_Buffer[RX_BUFF_SIZE];
 
 //------------------------------------------------------------
 //			Local prototypes
 //------------------------------------------------------------
 
+void RS_Clr(void);
 
 //------------------------------------------------------------
 //			Interrupt routines
@@ -49,13 +51,15 @@ ISR(USART0_RX_vect)
 
 void RS_Init(void)
 {
-
+	UCSR0B = _BV(RXEN0) | _BV(TXEN0) | _BV(RXCIE0);
+	UCSR0C = _BV(UCSZ01) | _BV(UCSZ00);
+	UBRR0L = 71;									// 9600,N,1 @ 11.0592MHz
 	RS_Clr();
 }
 
 void RS_Send8_t(uint8_t tx_data)
 {
-	While(!(UCSR0A & _BV(UDRE0)));
+	while(!(UCSR0A & _BV(UDRE0)));
 	UDR0 = tx_data;
 }
 
@@ -88,8 +92,12 @@ uint8_t RS_Send_num(int16_t num, uint8_t dec, uint8_t last)
 	}
 	decimal = (num%10) + 48;					// conversion to ASCII
 	if(dec == 1)
-		i += RS_Send8_t('.');
-	i =+ RS_Send8_t(decimal);
+	{
+		RS_Send8_t('.');
+		i++;
+	}
+	RS_Send8_t(decimal);
+	i++;
 	if(last)
 	{
 		RS_Send8_t(0x0A);
@@ -102,7 +110,7 @@ uint8_t RS_Send_num(int16_t num, uint8_t dec, uint8_t last)
 uint8_t RS_Get8_t(void)
 {
 	static uint8_t index = 0;
-	uint8_t data
+	uint8_t data;
 	
 	data = RX_Buffer[index++];
 	

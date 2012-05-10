@@ -23,7 +23,6 @@ volatile uint8_t Status;
 //			Prototypes
 //-------------------------------------
 
-void HW_Init(void);
 void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
 
 //-------------------------------------
@@ -34,14 +33,15 @@ void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
 
 int main(void)
 {
-	uint16_t steps;
+	uint16_t steps = 0;
 	uint8_t	 dir, key;
-	int16_t	 angle;
-	uint16_t position;
+	int16_t	 angle = 0;
+	uint16_t position = 0;
 
 	Status = 0;
 	
-	HW_Init();
+	DRV_Init();
+	RS_Init();
 	Timer_Init();
 
 	sei();					// start global interrupts
@@ -50,7 +50,7 @@ int main(void)
 	{
 		if(Status & STAT_RX)
 		{
-			if(Satus & STAT_RX_OVF)
+			if(Status & STAT_RX_OVF)
 			{
 			}
 			else
@@ -86,7 +86,7 @@ int main(void)
 			if(Status & STAT_TIMER)
 			{
 				DRV_Step(dir);
-				if(SW_END)
+				if((OUT_PIN & _BV(SWEND)) == _BV(SWEND))
 				{
 					steps--;
 					if(dir)
@@ -107,7 +107,7 @@ int main(void)
 				}
 				if(steps == 0)
 				{
-					Status &= ~STATUS_GO;				// if last step...
+					Status &= ~STAT_GO;				// if last step...
 					RS_Send_P(PSTR("OK\n\r"));
 				}
 			}
@@ -123,10 +123,10 @@ int main(void)
 		
 		if(Status & STAT_GO_ZERO)
 		{
-			while(SW_END)
+			while((OUT_PIN & _BV(SWEND)) == _BV(SWEND))
 			{
 				DRV_Step(0);
-				_delay_us(PULSE*10);
+				_delay_us(STEP_PULSE*10);
 			}
 			Status &= ~STAT_GO_ZERO;
 			position = 0;
@@ -141,33 +141,18 @@ int main(void)
 			case 0		:	if(!(Status & STAT_1SEC))
 								break;
 			case KEYFAST:	if(key & 0x01)
-								DRV_Step(1);
+								dir = 1;
 							else
-								DRV_Step(0);
-							_delay_us(PULSE*10);
+								dir = 0;
+							_delay_us(STEP_PULSE*10);
+							steps = 1;
+							Status |= STAT_GO;
 							break;
 		}
 
 	}
 
 	return(0);
-}
-
-void HW_Init(void)
-{
-	//clk 20 MHZ - set the system clk prescaler to 0
-	CLKPR = _BV(CLKPCE);		// enable change
-	CLKPR = 0x00;				// div by 1
-	
-	IN_DDR = 0;					// all pins as inputs
-	IN_PORT = (_BV(STEP)|_BV(DIR)|_BV(DIP0)|_BV(DIP1)|_BV(DIP2)|_BV(DIP3)); 	//internal pull-ups enabled
-	
-	OUT_DDR = 0xFF;				// all pins as outputs
-	OUT_PORT = 0;				// everything off 
-	
-	PCMSK1 |= _BV(PCINT13);		// unmask pcint13 - STEP signal
-	PCICR |= _BV(PCIE1)	;		// enable pin change interrupt from 8:14
-	
 }
 
 

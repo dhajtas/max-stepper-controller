@@ -11,6 +11,7 @@
 void DRV_Init(void)
 {
 		OUT_DDR |= (_BV(STEP) | _BV(DIR) | _BV(EN));
+		OUT_DDR &= ~(_BV(SWEND));
 		OUT_PORT &= ~(_BV(STEP) | _BV(DIR));
 		OUT_PORT |= _BV(EN);
 		KEY_DDR &= ~(_BV(KEYNF) | _BV(KEYN) | _BV(KEYP) | _BV(KEYPF));		//key as inputs
@@ -18,15 +19,15 @@ void DRV_Init(void)
 }
 
 
-void DRV_Step(uint8_t dir);
+void DRV_Step(uint8_t dir)
 {
 	if(dir)
 		OUT_PORT |= _BV(DIR);
 	else
-		OUT_PORT ~= ~(_BV(DIR));
+		OUT_PORT &= ~(_BV(DIR));
 	
 	OUT_PORT |= _BV(STEP);
-	_delay_us(PULSE);
+	_delay_us(STEP_PULSE);
 	OUT_PORT &= ~(_BV(STEP));
 }
 

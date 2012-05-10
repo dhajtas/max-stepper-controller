@@ -14,17 +14,30 @@
 #define LITTLE_ENDIAN
 #define STB_DELAY			240			// 4 mins delay to reduce current
 #define STEP_PULSE			30			// dead time between switching off the P and switching on N in us.
+#define RX_BUFF_SIZE		10
+
+#define DISP_P				C
+#define DISP_E				PC3
+#define DISP_RS				PC2
+#define DISP_D4				PC4
+#define DISP_D5				PC5
+#define DISP_D6				PC6
+#define DISP_D7				PC7
 
 #define OUT_P				D
 #define STEP				PD0
 #define DIR					PD2
 #define EN					PD1
+#define SWEND				PD3
 
-#define KEY_P
-#define KEYN
-#define KEYP
-#define KEYNF
-#define KEYPF
+#define RS_RX				PE0
+#define RS_TX				PE1
+
+#define KEY_P				A
+#define KEYN				PA2
+#define KEYP				PA1
+#define KEYNF				PA3
+#define KEYPF				PA0
 
 #define KEYFAST				0x04
 #define KEYPOS				0x01
@@ -41,6 +54,7 @@
 
 #define OUT_DDR				DDR(OUT_P)
 #define OUT_PORT			PORT(OUT_P)
+#define OUT_PIN				PIN(OUT_P)
 
 #define KEY_DDR				DDR(KEY_P)
 #define KEY_PIN				PIN(KEY_P)
