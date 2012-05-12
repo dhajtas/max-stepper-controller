@@ -17,7 +17,10 @@ ISR(TIMER1_COMPA_vect)
 		counter++;
 		if(counter > 50)
 		{
-			Status | STAT_1SEC;
+#if DEBUG ==1
+			DEBUG_PORT ^= _BV(TIMER_TICKLED);
+#endif
+			Status |= STAT_1SEC;
 			counter = 0;
 		}
 	}

@@ -36,6 +36,9 @@ ISR(USART0_RX_vect)
 		case 0x0D: Status |= STAT_RX;
 		case 0x0A: break;
 		default:
+#if DEBUG == 1
+					DEBUG_PORT |= _BV(RS_RXLED);
+#endif
 					RX_Buffer[RX_Index++] = data;
 					if (RX_Index > RX_BUFF_SIZE)
 					{
@@ -59,16 +62,25 @@ void RS_Init(void)
 
 void RS_Send8_t(uint8_t tx_data)
 {
+#if DEBUG == 1
+	DEBUG_PORT |= _BV(RS_TXLED);
+#endif
+
 	while(!(UCSR0A & _BV(UDRE0)));
 	UDR0 = tx_data;
+
+#if DEBUG == 1
+	DEBUG_PORT &= ~(_BV(RS_TXLED));
+#endif
+
 }
 
 uint8_t RS_Send_P(PGM_P tx_string)
 {
-	uint8_t lenght = strlen(tx_string);
+	uint8_t lenght = strlen_P(tx_string);
 	uint8_t i;
 	
-	for(i=0;i++;i<(lenght-1))
+	for(i=0;i<(lenght-1);i++)
 	{
 		RS_Send8_t(pgm_read_byte(tx_string+i));
 	}
@@ -138,4 +150,7 @@ void RS_Clr(void)
 {
 	RX_Index = 0;
 	Status &= ~(STAT_RX | STAT_RX_OVF);
+#if DEBUG == 1
+	DEBUG_PORT &= ~(_BV(RS_RXLED));
+#endif
 }

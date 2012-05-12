@@ -16,84 +16,93 @@
   24 0006 0F92      		push r0
   25 0008 1124      		clr __zero_reg__
   26 000a 8F93      		push r24
-  27               	/* prologue: Signal */
-  28               	/* frame size = 0 */
-  29               	.LM2:
-  30 000c 8091 0000 		lds r24,Status
-  31 0010 8860      		ori r24,lo8(8)
-  32 0012 8093 0000 		sts Status,r24
-  33               	.LM3:
-  34 0016 8091 0000 		lds r24,Status
-  35 001a 86FD      		sbrc r24,6
-  36 001c 00C0      		rjmp .L3
-  37               	.LM4:
-  38 001e 8091 0000 		lds r24,counter
-  39 0022 8F5F      		subi r24,lo8(-(1))
-  40 0024 8093 0000 		sts counter,r24
-  41               	.LM5:
-  42 0028 8091 0000 		lds r24,counter
-  43 002c 8333      		cpi r24,lo8(51)
-  44 002e 00F0      		brlo .L3
-  45               	.LM6:
-  46 0030 8091 0000 		lds r24,Status
-  47               	.LM7:
-  48 0034 1092 0000 		sts counter,__zero_reg__
-  49               	.L3:
-  50               	/* epilogue start */
-  51               	.LM8:
-  52 0038 8F91      		pop r24
-  53 003a 0F90      		pop r0
-  54 003c 0FBE      		out __SREG__,r0
-  55 003e 0F90      		pop r0
-  56 0040 1F90      		pop __zero_reg__
-  57 0042 1895      		reti
-  58               	.LFE2:
-  60               	.global	Timer_Init
-  62               	Timer_Init:
-  63               	.LFB3:
-  64               	.LM9:
-  65               	/* prologue: function */
-  66               	/* frame size = 0 */
-  67               	.LM10:
-  68 0044 1092 0000 		sts counter,__zero_reg__
-  69               	.LM11:
-  70 0048 1FBC      		out 79-32,__zero_reg__
-  71               	.LM12:
-  72 004a 88EC      		ldi r24,lo8(200)
-  73 004c 90E0      		ldi r25,hi8(200)
-  74 004e 9BBD      		out (74)+1-32,r25
-  75 0050 8ABD      		out 74-32,r24
-  76               	.LM13:
-  77 0052 1DBC      		out (76)+1-32,__zero_reg__
-  78 0054 1CBC      		out 76-32,__zero_reg__
-  79               	.LM14:
-  80 0056 87B7      		in r24,87-32
-  81 0058 8061      		ori r24,lo8(16)
-  82 005a 87BF      		out 87-32,r24
-  83               	.LM15:
-  84 005c 86B7      		in r24,86-32
-  85 005e 8061      		ori r24,lo8(16)
-  86 0060 86BF      		out 86-32,r24
-  87               	.LM16:
-  88 0062 8DE0      		ldi r24,lo8(13)
-  89 0064 8EBD      		out 78-32,r24
-  90               	/* epilogue start */
-  91               	.LM17:
-  92 0066 0895      		ret
-  93               	.LFE3:
-  95               		.comm counter,1,1
- 128               	.Letext0:
+  27 000c 9F93      		push r25
+  28               	/* prologue: Signal */
+  29               	/* frame size = 0 */
+  30               	.LM2:
+  31 000e 8091 0000 		lds r24,Status
+  32 0012 8860      		ori r24,lo8(8)
+  33 0014 8093 0000 		sts Status,r24
+  34               	.LM3:
+  35 0018 8091 0000 		lds r24,Status
+  36 001c 86FD      		sbrc r24,6
+  37 001e 00C0      		rjmp .L3
+  38               	.LM4:
+  39 0020 8091 0000 		lds r24,counter
+  40 0024 8F5F      		subi r24,lo8(-(1))
+  41 0026 8093 0000 		sts counter,r24
+  42               	.LM5:
+  43 002a 8091 0000 		lds r24,counter
+  44 002e 8333      		cpi r24,lo8(51)
+  45 0030 00F0      		brlo .L3
+  46               	.LM6:
+  47 0032 88B3      		in r24,56-32
+  48 0034 91E0      		ldi r25,lo8(1)
+  49 0036 8927      		eor r24,r25
+  50 0038 88BB      		out 56-32,r24
+  51               	.LM7:
+  52 003a 8091 0000 		lds r24,Status
+  53 003e 8064      		ori r24,lo8(64)
+  54 0040 8093 0000 		sts Status,r24
+  55               	.LM8:
+  56 0044 1092 0000 		sts counter,__zero_reg__
+  57               	.L3:
+  58               	/* epilogue start */
+  59               	.LM9:
+  60 0048 9F91      		pop r25
+  61 004a 8F91      		pop r24
+  62 004c 0F90      		pop r0
+  63 004e 0FBE      		out __SREG__,r0
+  64 0050 0F90      		pop r0
+  65 0052 1F90      		pop __zero_reg__
+  66 0054 1895      		reti
+  67               	.LFE2:
+  69               	.global	Timer_Init
+  71               	Timer_Init:
+  72               	.LFB3:
+  73               	.LM10:
+  74               	/* prologue: function */
+  75               	/* frame size = 0 */
+  76               	.LM11:
+  77 0056 1092 0000 		sts counter,__zero_reg__
+  78               	.LM12:
+  79 005a 1FBC      		out 79-32,__zero_reg__
+  80               	.LM13:
+  81 005c 88EC      		ldi r24,lo8(200)
+  82 005e 90E0      		ldi r25,hi8(200)
+  83 0060 9BBD      		out (74)+1-32,r25
+  84 0062 8ABD      		out 74-32,r24
+  85               	.LM14:
+  86 0064 1DBC      		out (76)+1-32,__zero_reg__
+  87 0066 1CBC      		out 76-32,__zero_reg__
+  88               	.LM15:
+  89 0068 87B7      		in r24,87-32
+  90 006a 8061      		ori r24,lo8(16)
+  91 006c 87BF      		out 87-32,r24
+  92               	.LM16:
+  93 006e 86B7      		in r24,86-32
+  94 0070 8061      		ori r24,lo8(16)
+  95 0072 86BF      		out 86-32,r24
+  96               	.LM17:
+  97 0074 8DE0      		ldi r24,lo8(13)
+  98 0076 8EBD      		out 78-32,r24
+  99               	/* epilogue start */
+ 100               	.LM18:
+ 101 0078 0895      		ret
+ 102               	.LFE3:
+ 104               		.comm counter,1,1
+ 137               	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 timer.c
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:18     .text:00000000 __vector_12
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:18     .text:00000000 __vector_12
                             *COM*:00000001 counter
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc16xjzZ.s:62     .text:00000044 Timer_Init
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:71     .text:00000056 Timer_Init
 
 UNDEFINED SYMBOLS
 Status
