@@ -31,6 +31,7 @@ void DRV_Step(uint8_t dir)
 	OUT_PORT |= _BV(STEP);
 	_delay_us(STEP_PULSE);
 	OUT_PORT &= ~(_BV(STEP));
+	Status &= ~STAT_TIMER;
 }
 
 uint8_t DRV_Get_key(void)

@@ -14,7 +14,7 @@
 #define FOSC				11059
 #define LITTLE_ENDIAN
 #define STB_DELAY			240			// 4 mins delay to reduce current
-#define STEP_PULSE			30			// Pulse width in us.
+#define STEP_PULSE			100			// Pulse width in us.
 #define RX_BUFF_SIZE		10
 
 #define DISP_P				C

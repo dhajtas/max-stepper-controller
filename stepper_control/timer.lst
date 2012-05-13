@@ -94,15 +94,15 @@
  137               	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 timer.c
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:2      *ABS*:0000003f __SREG__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:3      *ABS*:0000003e __SP_H__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:4      *ABS*:0000003d __SP_L__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:5      *ABS*:00000034 __CCP__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:6      *ABS*:00000000 __tmp_reg__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:7      *ABS*:00000001 __zero_reg__
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:18     .text:00000000 __vector_12
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:2      *ABS*:0000003f __SREG__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:3      *ABS*:0000003e __SP_H__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:4      *ABS*:0000003d __SP_L__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:5      *ABS*:00000034 __CCP__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:6      *ABS*:00000000 __tmp_reg__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:7      *ABS*:00000001 __zero_reg__
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:18     .text:00000000 __vector_12
                             *COM*:00000001 counter
-C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cc7N4L2s.s:71     .text:00000056 Timer_Init
+C:\DOCUME~1\DUNDEE~1.DAN\LOCALS~1\Temp/cco27BmF.s:71     .text:00000056 Timer_Init
 
 UNDEFINED SYMBOLS
 Status

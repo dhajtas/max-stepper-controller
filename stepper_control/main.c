@@ -36,7 +36,7 @@ int main(void)
 	uint16_t steps = 0;
 	uint8_t	 dir, key, sw;
 	int16_t	 angle = 0;
-	uint16_t position = 0;
+	int16_t position = 0;
 
 	Status = 0;
 
@@ -80,15 +80,15 @@ int main(void)
 					case 	'0':	Status |= STAT_GO_ZERO;
 									RS_Clr();
 									break;
-					case   	't':
-					case 	'T':	Status |= STAT_PRINT;
+					case   	's':
+					case 	'S':	Status |= STAT_PRINT;
 									RS_Clr();
 									break;
-					case 	'z':
-					case 	'Z':	angle = 0;
-									RS_Clr();
-									RS_Send_P(PSTR("OK\n\r"));
-									break;
+//					case 	'z':
+//					case 	'Z':	angle = 0;
+//									RS_Clr();
+//									RS_Send_P(PSTR("OK\n"));
+//									break;
 				}
 			}
 		}
@@ -98,32 +98,35 @@ int main(void)
 			DEBUG_PORT ^= 0x10;
 			if(Status & STAT_TIMER)
 			{
-				DRV_Step(dir);
-				sw = OUT_PIN & _BV(SWEND);
-				if( sw == _BV(SWEND))
+				if(steps)
 				{
-					steps--;
-					if(dir)
+					DRV_Step(dir);
+					sw = OUT_PIN & _BV(SWEND);
+					if( sw == _BV(SWEND))
 					{
-						position++;
-						angle += 18;
+						steps--;
+						if(dir)
+						{
+							position++;
+							angle += 18;
+						}
+						else
+						{
+							position--;
+							angle -= 18;
+						}
 					}
 					else
 					{
-						position--;
-						angle -= 18;
+						DRV_Step((dir + 1) & 0x01);		// one step back if end switch was hit
+						steps = 0;							// end of move - clear steps
 					}
-				}
-				else
-				{
-					DRV_Step((dir + 1) & 0x01);		// one step back if end switch was hit
-					steps = 0;							// end of move - clear steps
 				}
 				if(steps == 0)
 				{
 					Status &= ~STAT_GO;				// if last step...
 					if(!(Status & STAT_MAN))
-						RS_Send_P(PSTR("OK\n\r"));
+						RS_Send_P(PSTR("OK\n"));
 					Status &= ~STAT_MAN;
 				}
 			}
@@ -131,10 +134,12 @@ int main(void)
 		
 		if(Status & STAT_PRINT)
 		{
-			RS_Send_P(PSTR("Angle         : /t"));
-			RS_Send_num(angle,1,1);
-			RS_Send_P(PSTR("Abs. position : /t"));
-			RS_Send_num(position,0,1);
+//			RS_Send_P(PSTR("Angle         : "));
+//			RS_Send_num(angle,1,1);
+//			RS_Send_P(PSTR("Abs. position : "));
+			RS_Send_P(PSTR("+"));
+			RS_Send_num(position);
+			Status &= ~STAT_PRINT;
 		}
 		
 		if(Status & STAT_GO_ZERO)
@@ -149,7 +154,7 @@ int main(void)
 			Status &= ~STAT_GO_ZERO;
 			position = 0;
 			angle = -1350;
-			RS_Send_P(PSTR("OK\n\r"));
+			RS_Send_P(PSTR("OK\n"));
 		}
 		
 		key = DRV_Get_key();

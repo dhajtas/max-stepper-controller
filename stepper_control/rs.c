@@ -29,7 +29,9 @@ void RS_Clr(void);
 
 ISR(USART0_RX_vect)
 {
-	uint8_t data = UDR0;
+	uint8_t data;
+
+	data = UDR0;
 	
 	switch(data)
 	{
@@ -75,21 +77,34 @@ void RS_Send8_t(uint8_t tx_data)
 
 }
 
-uint8_t RS_Send_P(PGM_P tx_string)
+uint8_t RS_Send_P(PGM_P tx_string)		//, uint8_t eol)
 {
 	uint8_t lenght = strlen_P(tx_string);
-	uint8_t i;
+	uint8_t i, chr;
 	
 	for(i=0;i<(lenght-1);i++)
 	{
-		RS_Send8_t(pgm_read_byte(tx_string+i));
+		chr = pgm_read_byte(tx_string+i);
+		if(chr == '\n')
+		{
+			RS_Send8_t(0x0A);
+			RS_Send8_t(0x0D);
+		}
+		else
+		{
+			RS_Send8_t(chr);
+		}
 	}
-	RS_Send8_t(0x0A);
-	RS_Send8_t(0x0D);
-	i+=2;
+//	if(eol)
+//	{
+//		RS_Send8_t(0x0A);
+//		RS_Send8_t(0x0D);
+//		i+=2;
+//	}
 	return(i);
 }
 
+/*
 uint8_t RS_Send_num(int16_t num, uint8_t dec, uint8_t last)
 {
 	uint8_t decimal;
@@ -118,6 +133,25 @@ uint8_t RS_Send_num(int16_t num, uint8_t dec, uint8_t last)
 	}
 	return(i);
 }
+*/
+
+uint8_t RS_Send_num(int16_t num)
+{
+	uint8_t decimal;
+	uint8_t i=0;
+	
+	RS_Send8_t('+');
+	RS_Send8_t((num/100) + 48);					// conversion to ASCII
+	num = num%100;
+	RS_Send8_t((num/10) + 48);
+	num = num%10;
+	RS_Send8_t(num + 48);
+	RS_Send8_t(0x0A);
+	RS_Send8_t(0x0D);
+	i+=2;
+	return(i);
+}
+
 
 uint8_t RS_Get8_t(void)
 {
@@ -139,9 +173,9 @@ uint16_t RS_Getnum(void)
 {
 	uint16_t data;
 	
-	data = ((uint16_t)RS_Get8_t()-48)*1000;
-	data += ((uint16_t)RS_Get8_t()-48)*100;
-	data += (RS_Get8_t()-48)*10;
+	data = ((uint16_t)RS_Get8_t()-48)*100;
+	data += ((uint16_t)RS_Get8_t()-48)*10;
+	data += (RS_Get8_t()-48);
 	RS_Clr();
 	return(data);
 }
